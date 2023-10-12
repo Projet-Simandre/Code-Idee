@@ -10,8 +10,7 @@ WiFiServer server(80);
 void setup()
 {
   server.begin();
-	Serial.begin(9600);
-	delay(1000);
+	Serial.begin(115200);
 	Serial.println("\n");
 	
 	Serial.println("Creation du point d'acces...");
@@ -22,12 +21,11 @@ void setup()
 
 }
 
-void loop()
-{
+void loop() {
 
   WiFiClient client = server.available();
 
-  Lclient=client.read();
-	Serial.println(Lclient);
-  delay(5000);
+  Lclient = client.read();
+  Serial.println(Lclient);
+  
 }
