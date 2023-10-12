@@ -25,7 +25,10 @@ void loop() {
 
   WiFiClient client = server.available();
 
-  Lclient = client.read();
-  Serial.println(Lclient);
-  
+  while (client.connected()) {
+    if (client.available()) {
+      Lclient = client.read();
+      Serial.print(Lclient);
+    }
+  }
 }
