@@ -1,28 +1,68 @@
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <WiFi.h>
+const char* ssid ="SimAndré";
+const char* password = "12345678";
+char Lclient;
+String n ="";
+WiFiServer server(80);
+
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
+  
+  // ----------------------------------------- Connexion WiFi ----------------------------------------------
+    Serial.println("\n[*] Creation de la zone WiFi");
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP(ssid, password);
+    Serial.print("[+] AP Created with IP Gateway ");
+    Serial.println(WiFi.softAPIP());
+    // -----------------------------------------------------------------------------------------------------
+     // initialize serial:
+
+  WiFi.begin(ssid, password);
+ 
+    server.begin();
+    
+    
+
+
+
 }
+
 
 void loop() {
   // put your main code here, to run repeatedly:
-  String chaine1 = "19.0";
-  String chaine2 = "90.9";
-  String chaine = chaine1 + chaine2;
-  String valeur1, valeur2;
-  for (int i = 0; i < chaine.length(); i++)
-  {
+  // listen for incoming clients
+  WiFiClient client = server.available();
+  String valeu1, valeur2; //Chaine qui va contenir les deux chiffres différents
+   if (client) {
 
-    if(i >= chaine.length()/2)
-    {
-      valeur2 += chaine[i];
-    }
-    else
-    {
-      valeur1 += chaine[i];
+    
+     
+     while (client.connected()) {
+       
+    if (client.available()) {
+      Lclient = client.read();
+      n+= Lclient;
+      for (int i = 0; i < n.length(); i++){
+        if(i >= n.length()/2){
+          valeur2 += n[i];
+        }
+        else{
+          valeur1 += n[i];
+        }
+      }
     }
   }
-  
-  Serial.println(valeur2);
   Serial.println(valeur1);
-  delay(1000);
+  Serial.println(valeur2);
+   
+
+  
+}
+n=""; 
+
+
+
 }
