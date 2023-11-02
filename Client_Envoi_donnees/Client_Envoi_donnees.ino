@@ -20,7 +20,7 @@ void setup() {
     Serial.println("Connecté au WiFi !");
 }
 
-int tauxHumidite(){)
+int tauxHumidite(){
   int tauxHumidite = analogRead(humidite);
   int humide = map(tauxHumidite, 1024, 4060, 0, 100);
   return humide;
