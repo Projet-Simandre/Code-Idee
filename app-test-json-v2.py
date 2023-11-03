@@ -12,7 +12,15 @@ biggeneral = {"items":general}
 def recuperer_infos():
     if request.method == 'POST':
         data = request.get_json()
-        general.append(data)
+        maintenant = datetime.now()
+        temps = maintenant.strftime("%Y-%m-%d %H:%M:%S")
+         # Accédez à la valeur "temperature" dans l'objet JSON
+        temperature = data.get("temperature")
+        humidite = data.get("humidite")
+        generalItem = {"humidite" : humidite, "temperature" : temperature, "temps" : temps}
+        general.append(generalItem)
+      
+        
         biggeneral = {"items":general}
         # Traitez les données reçues ici
         # Enregistrez les données dans un fichier .txt, par exemple
