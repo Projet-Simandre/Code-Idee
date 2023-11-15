@@ -1,0 +1,95 @@
+from flask import Flask, request, jsonify
+from datetime import datetime
+import json
+
+count = 0
+
+itteration = [] # Dictionnaire qui sera l'itération d'un tableau
+Body = []   # Tableau qui contiendra toute les données
+Item = {"items":Body}   # Dictionnaire qui représente l'ensemble de l'API
+# ------------------------------------------
+ip_list = {}
+Body_ip = []
+IP_Item = {"ip_items":Body_ip}
+# ------------------------------------------
+
+memoire = {"temperature": None, "humidite": None, "qualite":None, "ip": None}
+
+app = Flask(__name__)
+@app.route('/recuperer_infos', methods=['POST'])
+
+def create_new_body():
+    global Body
+    Body.append([])
+
+def recuperer_infos():
+    global count
+    if request.method == 'POST':
+        data = request.get_json()   # Récupération de ce qui est envoyée
+        maintenant = datetime.now() # Récupère l'heure
+        temps = maintenant.strftime("%Y-%m-%d %H:%M:%S")    # Formate l'heure
+        
+        # Traitons la données reçu
+        temperature = data.get("temperature")
+        humidite = data.get("humidite")
+        qualite = data.get("qualite")
+        
+        # ---------------------------------------------------------
+
+        # Partie de stockage et de récupération des IP
+
+        ip = data.get("ip")
+        memoire["ip"] = ip
+        
+      
+      #  ip_list = {"ip" : memoire["ip"]}
+       # Body_ip.append(ip_list)
+       # IP_Item = {"ip_items":Body_ip}
+       # Ip_Item_dump = json.dumps(IP_Item)
+
+        # ---------------------------------------------------------
+
+        # Si la température est différente de None ou humidité alors on le met dans un tableau
+        if temperature != None:
+            memoire["temperature"] = temperature
+        
+            
+        if humidite != None:
+            memoire["humidite"] = humidite
+            
+        if qualite != None:
+             memoire["qualite"] = qualite
+
+
+        if memoire["temperature"] != None and memoire["humidite"] != None and memoire["qualite"] != None:
+            itteration = {"humidite" : memoire["humidite"], "temperature" : memoire["temperature"], "qualite" : memoire["qualite"], "ip" : memoire["ip"], "temps" : temps}
+            
+            if count % 3 == 0 and count >= 3:
+              create_new_body()
+              Body[-1].append(itteration)
+              count += 1
+            if count == 0:
+              create_new_body()
+              Body[-1].append(itteration)
+              count+=1
+              
+            if count % 3 != 0 and count >= 3:
+              Body[-1].append(itteration)
+              count+=1 
+            
+            Item = {"items":Body}
+            with open("data-test-10.json", "w") as f:
+                Item_dump = json.dumps(Item)
+                
+                f.write(str(Item_dump))
+                f.write("\n")
+            memoire["temperature"] = None
+            memoire["humidite"] = None
+            memoire["temperature"] = None
+            memoire["ip"] = None
+        
+        return "Données reçues avec succès", 200
+
+
+if __name__ == '__main__':
+    app.run(host='10.1.6.211',port=8080)
