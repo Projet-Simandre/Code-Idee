@@ -4,12 +4,12 @@
 const char* ssid ="SimAndré";
 const char* password = "12345678";
 char Lclient;
-
+String n ="";
 WiFiServer server(80);
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   // ----------------------------------------- Connexion WiFi ----------------------------------------------
     Serial.println("\n[*] Creation de la zone WiFi");
@@ -38,17 +38,23 @@ void loop() {
 
    if (client) {
 
-    if (client.connected()) {
-      Serial.println("Connected to client");
+    
      
+     while (client.connected()) {
+       
+    if (client.available()) {
       Lclient = client.read();
+      n+= Lclient;
       
-  Serial.println(Lclient);
     }
+
+  } 
+  Serial.println(n);
+   
 
   
 }
-
+n=""; 
 
 
 
