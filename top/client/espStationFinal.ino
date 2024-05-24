@@ -65,7 +65,7 @@ void loop() {
   DynamicJsonDocument data(1024);
   data["temperature"] = bmp.readTemperature();  // Exemple de valeur
   data["qualite"] = qualiteAir();
-  data["pression"] = bmp.readPressure();
+  data["pression"] = bmp.readPressure()-99517;
   data["ip"] = WiFi.localIP();
   data["mac"] = WiFi.macAddress();
 
@@ -75,7 +75,7 @@ void loop() {
   Serial.print("Pollution: ");
   Serial.println(qualiteAir());
   Serial.print("Pression: ");
-  Serial.println(bmp.readPressure());
+  Serial.println(bmp.readPressure()-99517);
   Serial.print("Ip: ");
   Serial.println(WiFi.localIP());
   Serial.print("Mac: ");
